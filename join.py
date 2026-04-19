@@ -4,7 +4,10 @@ from members import upsert_member_on_join
 from config import ADMIN_USER_ID, GROUP_ID
 
 router = Router()
-
+@router.message(F.new_chat_members)
+async def on_user_join(msg):
+    for user in msg.new_chat_members:
+        await msg.answer(f"{user.full_name} joined ✅")
 @router.chat_member()
 async def on_chat_member_update(event: ChatMemberUpdated):
     if event.chat.id != GROUP_ID:
