@@ -1,7 +1,7 @@
 from aiogram import Router, F
 from aiogram.types import CallbackQuery
-from bot.services.members import extend_member
-from bot.config import ADMIN_USER_ID
+from services.members import extend_member
+from config import ADMIN_USER_ID
 
 router = Router()
 
