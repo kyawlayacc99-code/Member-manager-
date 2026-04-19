@@ -3,14 +3,15 @@ from aiogram import Bot, Dispatcher
 from aiogram.types import Update, BotCommand
 from fastapi import FastAPI, Request, HTTPException
 from config import BOT_TOKEN, WEBHOOK_URL, CRON_SECRET, ADMIN_USER_ID
-from bot.handlers import join, callbacks  # + admin, member
-from bot.services.reminders import run_reminders
-from bot.services.reports import build_daily_report
+import join                # ✅ bot. ဖျက်ပြီး import လုပ်ပါ
+import callbacks           # ✅ bot. ဖျက်ပြီး import လုပ်ပါ
+from services.reminders import run_reminders      # ✅ bot. ကို ဖျက်ပါ
+from services.reports import build_daily_report   # ✅ bot. ကို ဖျက်ပါ
 
 bot = Bot(BOT_TOKEN)
 dp = Dispatcher()
-dp.include_router(join.router)
-dp.include_router(callbacks.router)
+dp.include_router(join.router)          # join က module ဖြစ်နေရင် .router ရှိရမယ်
+dp.include_router(callbacks.router)     # callbacks ကလည်း module ဖြစ်နေရင် .router ရှိရမယ်
 # dp.include_router(admin.router) ...
 
 app = FastAPI()
