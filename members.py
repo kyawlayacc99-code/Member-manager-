@@ -1,5 +1,5 @@
 from datetime import date, timedelta
-from bot.db import supabase
+from db import supabase
 
 def get_default_plan_days() -> int:
     r = supabase.table("bot_settings").select("value").eq("key","default_plan_days").single().execute()
