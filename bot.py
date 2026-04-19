@@ -5,8 +5,8 @@ from fastapi import FastAPI, Request, HTTPException
 from config import BOT_TOKEN, WEBHOOK_URL, CRON_SECRET, ADMIN_USER_ID
 import join                # ✅ bot. ဖျက်ပြီး import လုပ်ပါ
 import callbacks           # ✅ bot. ဖျက်ပြီး import လုပ်ပါ
-from services.reminders import run_reminders      # ✅ bot. ကို ဖျက်ပါ
-from services.reports import build_daily_report   # ✅ bot. ကို ဖျက်ပါ
+from reminders import run_reminders
+from reports import build_daily_report
 
 bot = Bot(BOT_TOKEN)
 dp = Dispatcher()
