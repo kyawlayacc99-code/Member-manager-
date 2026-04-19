@@ -2,7 +2,7 @@ import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.types import Update, BotCommand
 from fastapi import FastAPI, Request, HTTPException
-from bot.config import BOT_TOKEN, WEBHOOK_URL, CRON_SECRET, ADMIN_USER_ID
+from config import BOT_TOKEN, WEBHOOK_URL, CRON_SECRET, ADMIN_USER_ID
 from bot.handlers import join, callbacks  # + admin, member
 from bot.services.reminders import run_reminders
 from bot.services.reports import build_daily_report
