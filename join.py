@@ -1,17 +1,23 @@
 from aiogram import Router, F
-from aiogram.types import ChatMemberUpdated, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import ChatMemberUpdated, InlineKeyboardMarkup, InlineKeyboardButton, Message
 from members import upsert_member_on_join
 from config import ADMIN_USER_ID, GROUP_ID
-router = Router()
-from aiogram.types import Message
 
-@router.message()
-async def handle_message(msg: Message):
-    await msg.answer("Bot working ✅")
+router = Router()
+
+# ✅ group ထဲ new member join event (new_chat_members)
 @router.message(F.new_chat_members)
-async def on_user_join(msg):
+async def on_user_join_message(msg: Message):
     for user in msg.new_chat_members:
-        await msg.answer(f"{user.full_name} joined ✅")
+        if user.is_bot:
+            continue
+        member, is_new = upsert_member_on_join(
+            user.id, user.username, user.full_name
+        )
+        if is_new:
+            await notify_admin_new_join(msg.bot, user, member)
+
+# ✅ chat_member update (ပိုကောင်းတဲ့ detection method)
 @router.chat_member()
 async def on_chat_member_update(event: ChatMemberUpdated):
     if event.chat.id != GROUP_ID:
@@ -20,7 +26,6 @@ async def on_chat_member_update(event: ChatMemberUpdated):
     old_status = event.old_chat_member.status
     new_status = event.new_chat_member.status
 
-    # detect actual "join" transition
     joined = old_status in ("left", "kicked") and new_status in ("member", "restricted")
     if not joined:
         return
@@ -32,7 +37,11 @@ async def on_chat_member_update(event: ChatMemberUpdated):
     member, is_new = upsert_member_on_join(
         user.id, user.username, user.full_name
     )
+    if is_new:
+        await notify_admin_new_join(event.bot, user, member)
 
+
+async def notify_admin_new_join(bot, user, member):
     text = (
         f"🆕 *New member joined*\n\n"
         f"👤 {user.full_name}\n"
@@ -48,8 +57,11 @@ async def on_chat_member_update(event: ChatMemberUpdated):
             InlineKeyboardButton(text="+90d", callback_data=f"ext:{member['id']}:90"),
         ],
         [
-            InlineKeyboardButton(text="📅 Set Date", callback_data=f"setdate:{member['id']}"),
-            InlineKeyboardButton(text="✏️ Edit", callback_data=f"edit:{member['id']}"),
+            InlineKeyboardButton(text="👁 View", callback_data=f"view:{member['id']}"),
+            InlineKeyboardButton(text="🗑 Remove", callback_data=f"remove:{member['id']}"),
         ],
     ])
-    await event.bot.send_message(ADMIN_USER_ID, text, reply_markup=kb, parse_mode="Markdown")
+    try:
+        await bot.send_message(ADMIN_USER_ID, text, reply_markup=kb, parse_mode="Markdown")
+    except Exception as e:
+        print(f"Failed to notify admin: {e}")
