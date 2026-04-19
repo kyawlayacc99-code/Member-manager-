@@ -1,7 +1,7 @@
 from aiogram import Router, F
 from aiogram.types import ChatMemberUpdated, InlineKeyboardMarkup, InlineKeyboardButton
-from bot.services.members import upsert_member_on_join
-from bot.config import ADMIN_USER_ID, GROUP_ID
+from services.members import upsert_member_on_join
+from config import ADMIN_USER_ID, GROUP_ID
 
 router = Router()
 
