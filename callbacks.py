@@ -1,6 +1,6 @@
 from aiogram import Router, F
 from aiogram.types import CallbackQuery
-from services.members import extend_member
+from members import extend_member
 from config import ADMIN_USER_ID
 
 router = Router()
