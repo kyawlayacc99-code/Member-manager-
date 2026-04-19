@@ -1,5 +1,5 @@
 from datetime import date, timedelta
-from bot.db import supabase
+from db import supabase
 
 def build_daily_report():
     today = date.today()
