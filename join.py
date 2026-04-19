@@ -2,8 +2,12 @@ from aiogram import Router, F
 from aiogram.types import ChatMemberUpdated, InlineKeyboardMarkup, InlineKeyboardButton
 from members import upsert_member_on_join
 from config import ADMIN_USER_ID, GROUP_ID
-
 router = Router()
+from aiogram.types import Message
+
+@router.message()
+async def handle_message(msg: Message):
+    await msg.answer("Bot working ✅")
 @router.message(F.new_chat_members)
 async def on_user_join(msg):
     for user in msg.new_chat_members:
