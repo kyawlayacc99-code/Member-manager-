@@ -1,6 +1,6 @@
 from datetime import date
-from bot.db import supabase
-from bot.config import GROUP_ID
+from db import supabase
+from config import GROUP_ID
 
 REMIND_DAYS = [7, 3, 1, 0]
 
